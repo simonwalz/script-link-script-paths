@@ -1,0 +1,27 @@
+#!/bin/sh
+
+TARGET="$1"
+
+DEBUG=""
+if test "x${TARGET}" = "x-d"
+then
+	DEBUG="echo "
+	TARGET="$2"
+fi
+
+if test "x${TARGET}" = "x" || test ! -d "${TARGET}"
+then
+	echo "Error: Target not defined and dir does not exist"
+	echo
+	echo "Usage: prog [-d] target_dir"
+	echo "-d	debug: do not perform any actions"
+	exit 2
+fi
+
+# Delete all broken symbolic links in the target dir:
+find -L "${TARGET}" -depth 1 -type l -exec ${DEBUG}rm -- {} +
+
+# Create new links:
+find "${PWD}" -name ".*" -prune -o \( -depth 2 -type file -perm +111 \
+	-exec ${DEBUG}ln -sf {} "${TARGET}/" \; \)
+
