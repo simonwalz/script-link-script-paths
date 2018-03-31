@@ -3,7 +3,7 @@
 Let's organise our shell script files in git repositories. Wait, we don't
 want to add all these git repositories to the search path.
 
-This tool links script files into one directory. So we only have to add this
+This tool links script files into one directory, so we only need to add this
 single directory to the path.
 
 ## Usage
@@ -14,7 +14,7 @@ the given target directory.
 
 ```sh
 cd ~/my_scripts/
-link-script-path [-d] TARGET_DIR
+link-script-paths [-d] TARGET_DIR
 ```
 
 ##### Options
@@ -22,7 +22,7 @@ link-script-path [-d] TARGET_DIR
 
 
 ##### Target directory
-The given target directory shall added to the path environment.
+The given target directory shall be added to the search path environment.
 Add to your `.bashrc`:
 ```sh
 PATH="${PATH}:~/my_scripts"
