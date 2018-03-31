@@ -19,9 +19,9 @@ then
 fi
 
 # Delete all broken symbolic links in the target dir:
-find -L "${TARGET}" -depth 1 -type l -exec ${DEBUG}rm -- {} +
+find -L "${TARGET}" -maxdepth 1 -type l -exec ${DEBUG}rm -- {} +
 
 # Create new links:
-find "${PWD}" -name ".*" -prune -o \( -depth 2 -type file -perm +111 \
+find "${PWD}" -name ".*" -prune -o \( -type f -perm -111 \
 	-exec ${DEBUG}ln -sf {} "${TARGET}/" \; \)
 
