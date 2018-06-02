@@ -1,20 +1,37 @@
 #!/bin/sh
 
-TARGET="$1"
-
 DEBUG=""
-if test "x${TARGET}" = "x-d"
+if test "x${1}" = "x-d"
 then
+	shift
 	DEBUG="echo "
-	TARGET="$2"
 fi
 
-if test "x${TARGET}" = "x" || test ! -d "${TARGET}"
+TARGET="$1"
+if test "x${TARGET}" = "x-s"
+then
+	if test -h "$0"
+	then
+		TARGET="$(dirname "$0")"
+		SCRIPTPATH="$(readlink -f 2>/dev/null || perl -MCwd -e 'print Cwd::abs_path shift' $0)"
+		cd "$(dirname "${SCRIPTPATH}")" && cd ..
+	elif test "x$(id -u)" = "x0"
+	then
+		TARGET="/usr/local/bin"
+	else
+		TARGET="~/.bin"
+	fi
+	echo "Target directory: ${TARGET}"
+
+elif test "x${TARGET}" = "x" || test ! -d "${TARGET}"
 then
 	echo "Error: Target not defined and dir does not exist"
 	echo
 	echo "Usage: prog [-d] target_dir"
 	echo "-d	debug: do not perform any actions"
+	echo "-s	read own symlink for target"
+	echo "		otherwise use /usr/local/bin for root"
+	echo "		and ~/.bin for a normal users"
 	exit 2
 fi
 
